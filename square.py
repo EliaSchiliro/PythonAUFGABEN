@@ -1,10 +1,12 @@
 
 
 def zeichne_quadrat(laenge):
-    print("Mache deine Hausaufgaben")
+    print("-" * laenge)
+    s = '|' +' ' * (laenge - 2) + '|'
+    for x in range(laenge - 2):
+        print(s)
+    print("-" * laenge)
 
-# bsp drucke ein zeichen 10mal in der gleichen Zeile
-print("+" * 10)
 
 
 zeichne_quadrat(10)
