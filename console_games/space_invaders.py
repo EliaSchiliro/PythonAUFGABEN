@@ -1,18 +1,23 @@
 
 import curses
+from time import sleep
 
-
-def draw_menu(stdscr):
+def draw_game(stdscr):
+    shell = curses.initscr()
+    shell.nodelay(True)
+    # diese var wird gefüllt mit der gedrückten taste
     k = 0
+    # hole hoehe und breite des bildschirms
     height, width = stdscr.getmaxyx()
+    #berechne start position des raumschiffes
     cursor_x = (width - (width % 2)) // 2
-    cursor_y = 0
+
 
     # Clear and refresh the screen for a blank canvas
     stdscr.clear()
     stdscr.refresh()
 
-    # Start colors in curses
+    # Start colors in cursesq
     curses.start_color()
     curses.init_pair(1, curses.COLOR_CYAN, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)
@@ -20,37 +25,26 @@ def draw_menu(stdscr):
 
     # Loop where k is the last character pressed
     while (k != ord('q')):
-
+        # hole mir die gedrückte taste
+        k = stdscr.getch()
         # Initialization
         stdscr.clear()
-        height, width = stdscr.getmaxyx()
 
-        # if k == curses.KEY_DOWN:
-        #     cursor_y = cursor_y + 1
-        # elif k == curses.KEY_UP:
-        #     cursor_y = cursor_y - 1
         if k == curses.KEY_RIGHT:
             cursor_x = cursor_x + 1
         elif k == curses.KEY_LEFT:
             cursor_x = cursor_x - 1
 
-        cursor_x = max(0, cursor_x)
-        cursor_x = min(width-1, cursor_x)
+        # stelle sicher das raumschiff nicht aus dem bildschirm fliegt
 
-        cursor_y = max(0, cursor_y)
-        cursor_y = min(height-1, cursor_y)
 
-        # Declaration of strings
-        statusbarstr = "Press 'q' to exit | STATUS BAR | Pos: {}, {}".format(cursor_x, cursor_y)
-        if k == 0:
-            keystr = "No key press detected..."[:width-1]
-
-        # Centering calculations
-
-        # Rendering some text
-        whstr = "Width: {}, Height: {}, cursor_x: {}, cursor_y: {}, key_pressed: {}".format(width, height, cursor_x, cursor_y, k)
+        # zeige die positionen an oben links
+        whstr = "Width: {}, Height: {}, cursor_x: {}, key_pressed: {}".format(width, height, cursor_x, k)
         stdscr.addstr(0, 0, whstr, curses.color_pair(1))
-        stdscr.addstr(height-1, cursor_x, "X", curses.color_pair(2))
+        # render your starship
+        stdscr.addstr(height-1, cursor_x, "X", curses.color_pair(1))
+
+        #setze immer den cursor in die ecke damit er im spiel nicht stört
         stdscr.move(0, 0)
 
 
@@ -59,11 +53,11 @@ def draw_menu(stdscr):
         stdscr.refresh()
 
         # Wait for next input
-        k = stdscr.getch()
+        sleep(1)
 
 
 def main():
-    curses.wrapper(draw_menu)
+    curses.wrapper(draw_game)
 
 
 if __name__ == "__main__":
